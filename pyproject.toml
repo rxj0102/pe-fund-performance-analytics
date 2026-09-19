@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pe-fund-performance-analytics"
+version = "0.1.0"
+description = "PE fund-of-funds performance analytics: IRR/MOIC/TVPI, PME benchmarking, J-curve modeling, pacing, and manager due diligence scoring on synthetic data."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "scipy>=1.11",
+    "matplotlib>=3.8",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
