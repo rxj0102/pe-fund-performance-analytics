@@ -1,5 +1,7 @@
 # PE Fund-of-Funds Performance Analytics
 
+[![CI](https://github.com/rxj0102/pe-fund-performance-analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/rxj0102/pe-fund-performance-analytics/actions/workflows/ci.yml)
+
 A Python toolkit for analyzing private equity fund performance the way a **fund-of-funds (FoF) analyst** actually does it: dated-cash-flow IRR, MOIC/DPI/RVPI/TVPI, Public Market Equivalent (PME) benchmarking, J-curve modeling, commitment pacing, and a structured manager due-diligence scorecard — built around a synthetic small-cap buyout portfolio spanning primaries, co-investments, and secondaries.
 
 **Full walkthrough:** [`notebooks/portfolio_analysis.ipynb`](notebooks/portfolio_analysis.ipynb) — an end-to-end analysis written with investment-committee-style commentary.
