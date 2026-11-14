@@ -2,32 +2,32 @@
 
 [![CI](https://github.com/rxj0102/pe-fund-performance-analytics/actions/workflows/ci.yml/badge.svg)](https://github.com/rxj0102/pe-fund-performance-analytics/actions/workflows/ci.yml)
 
-A Python toolkit for analyzing private equity fund performance the way a **fund-of-funds (FoF) analyst** actually does it: dated-cash-flow IRR, MOIC/DPI/RVPI/TVPI, Public Market Equivalent (PME) benchmarking, J-curve modeling, commitment pacing, and a structured manager due-diligence scorecard — built around a synthetic small-cap buyout portfolio spanning primaries, co-investments, and secondaries.
+A Python toolkit for analyzing private equity fund performance the way a **fund-of-funds (FoF) analyst** actually does it: dated-cash-flow IRR, MOIC/DPI/RVPI/TVPI, Public Market Equivalent (PME) benchmarking, J-curve modeling, commitment pacing, and a structured manager due-diligence scorecard; built around a synthetic small-cap buyout portfolio spanning primaries, co-investments, and secondaries.
 
-**Full walkthrough:** [`notebooks/portfolio_analysis.ipynb`](notebooks/portfolio_analysis.ipynb) — an end-to-end analysis written with investment-committee-style commentary.
+**Full walkthrough:** [`notebooks/portfolio_analysis.ipynb`](notebooks/portfolio_analysis.ipynb); an end-to-end analysis written with investment-committee-style commentary.
 
-> **This project uses entirely synthetic, illustrative cash flow data.** No fund, GP, or manager named here is real, and no real fund data was used at any point. The methodology — how each metric is computed — is real and industry-standard; the numbers behind it are generated (seeded, reproducible) for demonstration purposes only.
+> **This project uses entirely synthetic, illustrative cash flow data.** No fund, GP, or manager named here is real, and no real fund data was used at any point. The methodology, how each metric is computed, is real and industry-standard; the numbers behind it are generated (seeded, reproducible) for demonstration purposes only.
 
 ---
 
 ## What a fund-of-funds does
 
-A private equity fund-of-funds doesn't invest directly in companies — it invests in *other GPs' funds* (primary commitments), alongside them in individual deals (co-investments), and occasionally buys existing LP interests from other investors (secondaries), on behalf of its own limited partners. Its job is threefold: pick managers who can repeat their track record, benchmark whether that access is actually worth the illiquidity versus just buying the public market, and plan the pacing of new commitments so the fund-of-funds itself never runs short of cash when calls come due. This project builds the analytical toolkit for all three.
+A private equity fund-of-funds doesn't invest directly in companies; it invests in *other GPs' funds* (primary commitments), alongside them in individual deals (co-investments), and occasionally buys existing LP interests from other investors (secondaries), on behalf of its own limited partners. Its job is threefold: pick managers who can repeat their track record, benchmark whether that access is actually worth the illiquidity versus just buying the public market, and plan the pacing of new commitments so the fund-of-funds itself never runs short of cash when calls come due. This project builds the analytical toolkit for all three.
 
-## Why track IRR, MOIC, DPI, RVPI, *and* TVPI — not just one
+## Why track IRR, MOIC, DPI, RVPI, *and* TVPI: not just one
 
 | Metric | What it measures | What it misses |
 |---|---|---|
-| **IRR** (XIRR on dated cash flows) | Time-sensitive, money-weighted annual return | Says nothing about total value created — a fund can have a great IRR on a small, fast deal and a mediocre one on a much larger value-creation story |
-| **MOIC** | Total value returned per dollar invested | Completely ignores timing — a 2.5x in 4 years and a 2.5x in 12 years look identical |
+| **IRR** (XIRR on dated cash flows) | Time-sensitive, money-weighted annual return | Says nothing about total value created, a fund can have a great IRR on a small, fast deal and a mediocre one on a much larger value-creation story |
+| **MOIC** | Total value returned per dollar invested | Completely ignores timing, a 2.5x in 4 years and a 2.5x in 12 years look identical |
 | **DPI** | *Realized* cash-on-cash return already distributed | Doesn't capture value still building in the portfolio |
-| **RVPI** | *Unrealized* value still marked on the books | Is a GP's mark, not a proven exit — the least trustworthy of the four for a young fund |
-| **TVPI** | DPI + RVPI — the total value multiple, GP-reported quarterly | Same blind spot as MOIC: no sense of timing efficiency |
+| **RVPI** | *Unrealized* value still marked on the books | Is a GP's mark, not a proven exit, the least trustworthy of the four for a young fund |
+| **TVPI** | DPI + RVPI, the total value multiple, GP-reported quarterly | Same blind spot as MOIC: no sense of timing efficiency |
 
-A fund-of-funds analyst looks at all five together because they answer different questions: TVPI tells you where a fund is headed, DPI/RVPI tell you how much of that is proven versus still a mark, and IRR tells you whether capital was used efficiently getting there. **PME** answers a different question again — not "was this a good return," but "was locking up capital in an illiquid fund actually worth it, versus the public market?" Two methodologies are implemented:
+A fund-of-funds analyst looks at all five together because they answer different questions: TVPI tells you where a fund is headed, DPI/RVPI tell you how much of that is proven versus still a mark, and IRR tells you whether capital was used efficiently getting there. **PME** answers a different question again, not *was this a good return,* but *was locking up capital in an illiquid fund actually worth it, versus the public market?* Two methodologies are implemented:
 
 - **Kaplan-Schoar PME (KS-PME):** future-values every cash flow to a common date using a benchmark index, then divides FV(distributions + residual value) by FV(contributions). Simple, always defined, and the PME statistic most commonly quoted industry-wide.
-- **Long-Nickels PME (LN-PME):** replays the fund's *exact* cash flows into a hypothetical index-tracking shadow portfolio and computes its IRR — directly comparable to the fund's own IRR. Known limitation: if a fund dramatically outperforms, the shadow portfolio's NAV can go negative, making its IRR undefined (this is flagged, not silently miscomputed).
+- **Long-Nickels PME (LN-PME):** replays the fund's *exact* cash flows into a hypothetical index-tracking shadow portfolio and computes its IRR; directly comparable to the fund's own IRR. Known limitation: if a fund dramatically outperforms, the shadow portfolio's NAV can go negative, making its IRR undefined (this is flagged, not silently miscomputed).
 
 Because this portfolio is small-cap buyout, benchmarking uses a synthetic **Russell 2000**-like index.
 
@@ -50,7 +50,7 @@ tests/
 
 ### The synthetic portfolio
 
-10 positions, 2013–2020 vintage years: 7 diversified primary fund commitments, 2 co-investments (single-deal, front-loaded calls, concentrated risk), and 1 secondary (an LP interest purchased partway through an existing fund's life, priced off NAV at a discount — which mutes the early J-curve). Generation is fully seeded (`numpy.random.default_rng`), so every run is reproducible.
+10 positions, 2013–2020 vintage years: 7 diversified primary fund commitments, 2 co-investments (single-deal, front-loaded calls, concentrated risk), and 1 secondary (an LP interest purchased partway through an existing fund's life, priced off NAV at a discount, which mutes the early J-curve). Generation is fully seeded (`numpy.random.default_rng`), so every run is reproducible.
 
 ## How to run it
 
@@ -118,4 +118,4 @@ All fund names, GP names, cash flows, NAVs, index levels, and manager due-dilige
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT: see [LICENSE](LICENSE).
